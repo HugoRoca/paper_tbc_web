@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const Router = require('@koa/router');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const logger = require('koa-logger');
@@ -8,6 +9,7 @@ require('dotenv').config();
 
 const errorHandler = require('./middleware/errorHandler');
 const auditLog = require('./middleware/audit');
+const { rateLimiter, authRateLimiter } = require('./middleware/rateLimiter');
 
 // Inicializar modelos Sequelize (debe ir antes de las rutas)
 const { sequelize } = require('./models');
@@ -27,6 +29,11 @@ const visitaDomiciliariaRoutes = require('./routes/visitaDomiciliariaRoutes');
 const derivacionTransferenciaRoutes = require('./routes/derivacionTransferenciaRoutes');
 const alertaRoutes = require('./routes/alertaRoutes');
 const establecimientoSaludRoutes = require('./routes/establecimientoSaludRoutes');
+const userRoutes = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes');
+const auditoriaRoutes = require('./routes/auditoriaRoutes');
+const integracionLogRoutes = require('./routes/integracionLogRoutes');
+const integracionRoutes = require('./routes/integracionRoutes');
 
 // Swagger
 const swaggerSpec = require('./config/swagger');
@@ -35,7 +42,9 @@ const { koaSwagger } = require('koa2-swagger-ui');
 const app = new Koa();
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false // Deshabilitar CSP para Swagger UI
+}));
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   credentials: true
@@ -47,6 +56,23 @@ app.use(bodyParser({
   formLimit: '10mb'
 }));
 
+// Router para Swagger JSON
+const swaggerRouter = new Router();
+swaggerRouter.get('/api-docs.json', async (ctx) => {
+  ctx.set('Content-Type', 'application/json');
+  ctx.body = swaggerSpec;
+});
+app.use(swaggerRouter.routes()).use(swaggerRouter.allowedMethods());
+
+// Rate limiting (excluir endpoints de Swagger)
+app.use(async (ctx, next) => {
+  // No aplicar rate limiting a Swagger
+  if (ctx.path.startsWith('/api-docs') || ctx.path === '/swagger.json') {
+    return await next();
+  }
+  return rateLimiter(ctx, next);
+});
+
 // Error handler
 app.use(errorHandler);
 
@@ -55,9 +81,14 @@ app.use(
   koaSwagger({
     routePrefix: '/api-docs',
     swaggerOptions: {
-      spec: swaggerSpec
+      url: '/api-docs.json',
+      persistAuthorization: true,
+      docExpansion: 'list',
+      filter: true,
+      showRequestHeaders: true
     },
-    hideTopbar: true
+    hideTopbar: true,
+    customCss: '.swagger-ui .topbar { display: none }'
   })
 );
 
@@ -90,6 +121,11 @@ app.use(visitaDomiciliariaRoutes.routes()).use(visitaDomiciliariaRoutes.allowedM
 app.use(derivacionTransferenciaRoutes.routes()).use(derivacionTransferenciaRoutes.allowedMethods());
 app.use(alertaRoutes.routes()).use(alertaRoutes.allowedMethods());
 app.use(establecimientoSaludRoutes.routes()).use(establecimientoSaludRoutes.allowedMethods());
+app.use(userRoutes.routes()).use(userRoutes.allowedMethods());
+app.use(roleRoutes.routes()).use(roleRoutes.allowedMethods());
+app.use(auditoriaRoutes.routes()).use(auditoriaRoutes.allowedMethods());
+app.use(integracionLogRoutes.routes()).use(integracionLogRoutes.allowedMethods());
+app.use(integracionRoutes.routes()).use(integracionRoutes.allowedMethods());
 
 // 404 handler
 app.use(async (ctx) => {

@@ -41,6 +41,8 @@ const ReaccionAdversa = require('./ReaccionAdversa')(sequelize);
 const VisitaDomiciliaria = require('./VisitaDomiciliaria')(sequelize);
 const DerivacionTransferencia = require('./DerivacionTransferencia')(sequelize);
 const Alerta = require('./Alerta')(sequelize);
+const Auditoria = require('./Auditoria')(sequelize);
+const IntegracionLog = require('./IntegracionLog')(sequelize);
 
 // Definir asociaciones
 // Usuario - Role
@@ -207,6 +209,14 @@ EstablecimientoSalud.hasMany(VisitaDomiciliaria, { foreignKey: 'establecimiento_
 VisitaDomiciliaria.belongsTo(Usuario, { foreignKey: 'usuario_visita_id', as: 'usuarioVisita' });
 Usuario.hasMany(VisitaDomiciliaria, { foreignKey: 'usuario_visita_id', as: 'visitasRealizadas' });
 
+// Auditoria - Usuario
+Auditoria.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+Usuario.hasMany(Auditoria, { foreignKey: 'usuario_id', as: 'auditorias' });
+
+// IntegracionLog - Usuario
+IntegracionLog.belongsTo(Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+Usuario.hasMany(IntegracionLog, { foreignKey: 'usuario_id', as: 'integracionesLog' });
+
 // Testear conexión
 sequelize.authenticate()
   .then(() => {
@@ -232,5 +242,7 @@ module.exports = {
   ReaccionAdversa,
   VisitaDomiciliaria,
   DerivacionTransferencia,
-  Alerta
+  Alerta,
+  Auditoria,
+  IntegracionLog
 };

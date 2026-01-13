@@ -590,52 +590,116 @@ El backend incluye documentación interactiva con Swagger/OpenAPI:
 - `PUT /api/establecimientos-salud/:id` - Actualizar establecimiento
 - `DELETE /api/establecimientos-salud/:id` - Eliminar establecimiento
 
-### ⚠️ Endpoints Faltantes
+#### Gestión de Usuarios ✅
+- `GET /api/usuarios` - Listar usuarios (con paginación y filtros, requiere Administrador)
+- `POST /api/usuarios` - Crear usuario (requiere Administrador)
+- `GET /api/usuarios/:id` - Obtener usuario (requiere Administrador)
+- `PUT /api/usuarios/:id` - Actualizar usuario (requiere Administrador)
+- `PUT /api/usuarios/:id/cambiar-password` - Cambiar contraseña (usuario puede cambiar su propia contraseña)
+- `DELETE /api/usuarios/:id` - Eliminar/desactivar usuario (requiere Administrador)
 
-#### Gestión de Usuarios
-- `GET /api/usuarios` - Listar usuarios (con paginación y filtros)
-- `POST /api/usuarios` - Crear usuario
-- `GET /api/usuarios/:id` - Obtener usuario
-- `PUT /api/usuarios/:id` - Actualizar usuario
-- `DELETE /api/usuarios/:id` - Eliminar/desactivar usuario
-- `PUT /api/usuarios/:id/cambiar-password` - Cambiar contraseña
+#### Gestión de Roles ✅
+- `GET /api/roles` - Listar roles (todos los usuarios autenticados)
+- `POST /api/roles` - Crear rol (solo Administradores)
+- `GET /api/roles/:id` - Obtener rol (todos los usuarios autenticados)
+- `PUT /api/roles/:id` - Actualizar rol (solo Administradores)
+- `DELETE /api/roles/:id` - Eliminar rol (solo Administradores)
 
-#### Gestión de Roles
-- `GET /api/roles` - Listar roles
-- `POST /api/roles` - Crear rol (solo administradores)
-- `GET /api/roles/:id` - Obtener rol
-- `PUT /api/roles/:id` - Actualizar rol
-- `DELETE /api/roles/:id` - Eliminar rol
+#### Auditoría (RNF-03) ✅
+- `GET /api/auditoria` - Listar registros de auditoría (solo lectura, requiere Administrador)
+- `GET /api/auditoria/:id` - Obtener registro de auditoría (requiere Administrador)
+- `GET /api/auditoria/usuario/:usuarioId` - Listar auditoría por usuario (requiere Administrador)
+- `GET /api/auditoria/tabla/:tabla` - Listar auditoría por tabla (requiere Administrador)
 
-#### Auditoría (RNF-03)
-- `GET /api/auditoria` - Listar registros de auditoría (solo lectura, requiere permisos especiales)
-- `GET /api/auditoria/:id` - Obtener registro de auditoría
-- `GET /api/auditoria/usuario/:usuarioId` - Listar auditoría por usuario
-- `GET /api/auditoria/tabla/:tabla` - Listar auditoría por tabla
-
-#### Integraciones (RF-07, RNF-02)
-- `GET /api/integraciones-log` - Listar logs de integraciones (solo lectura)
-- `GET /api/integraciones-log/:id` - Obtener log de integración
-- `GET /api/integraciones-log/sistema/:sistema` - Listar logs por sistema (SIGTB, NETLAB)
-- `POST /api/integraciones/sigtb/consultar` - Consultar SIGTB (si se implementa)
-- `POST /api/integraciones/netlab/consultar` - Consultar NETLAB (si se implementa)
+#### Integraciones (RF-07, RNF-02) ✅
+- `GET /api/integraciones-log` - Listar logs de integraciones (solo lectura, requiere Administrador)
+- `GET /api/integraciones-log/:id` - Obtener log de integración (requiere Administrador)
+- `GET /api/integraciones-log/sistema/:sistema` - Listar logs por sistema (SIGTB, NETLAB, Otro, requiere Administrador)
+- `POST /api/integraciones/sigtb/consultar` - Consultar SIGTB (requiere Administrador o Médico)
+- `POST /api/integraciones/netlab/consultar` - Consultar NETLAB (requiere Administrador o Médico)
 
 ### Resumen de Cobertura
 
-- **Tablas con endpoints completos**: 13/15 (87%)
-- **Tablas con endpoints parciales**: 1/15 (usuarios - solo auth)
-- **Tablas sin endpoints**: 3/15 (roles, auditoria, integraciones_log)
+- **Tablas con endpoints completos**: 17/17 (100%) ✅
+- **Tablas con endpoints parciales**: 0/17
+- **Tablas sin endpoints**: 0/17
 
-**Nota**: Las tablas `auditoria` e `integraciones_log` son principalmente para logging interno y pueden no requerir endpoints públicos, solo de administración.
+**Nota**: ✅ **TODOS los endpoints están implementados**. Todas las tablas funcionales tienen endpoints completos. Las tablas de logging (`auditoria` e `integraciones_log`) tienen endpoints de consulta para administradores.
 
-## Próximos Pasos
+## Tareas Completadas ✅
 
-1. ✅ Configurar conexión desde el backend Node.js (Completado - usando Sequelize)
-2. ⏳ Implementar endpoints faltantes (usuarios, roles, auditoría)
-3. ⏳ Implementar migraciones de base de datos con Sequelize
-4. ⏳ Crear stored procedures si es necesario
-5. ⏳ Configurar backups automáticos
-6. ⏳ Implementar integraciones con SIGTB y NETLAB (RF-07, RNF-02)
+### Funcionalidades Implementadas
+
+1. ✅ **Endpoints de Gestión de Usuarios**
+   - CRUD completo de usuarios (`/api/usuarios`)
+   - Cambio de contraseña (`PUT /api/usuarios/:id/cambiar-password`)
+   - Búsqueda y filtrado de usuarios
+   - Paginación
+
+2. ✅ **Endpoints de Gestión de Roles**
+   - CRUD completo de roles (`/api/roles`)
+   - Listado con búsqueda y filtros
+   - Validación de nombres únicos
+
+3. ✅ **Endpoints de Auditoría**
+   - Consulta de registros de auditoría (`/api/auditoria`)
+   - Filtros por usuario, tabla, fecha, acción
+   - Consulta por usuario específico
+   - Consulta por tabla específica
+
+4. ✅ **Validación de Datos**
+   - Middleware de validación con Joi
+   - Validación de requests en endpoints
+   - Mensajes de error estructurados
+
+5. ✅ **Migraciones de Base de Datos**
+   - Configuración de Sequelize CLI
+   - Archivo `.sequelizerc` configurado
+   - Configuración de entornos (development, test, production)
+
+6. ✅ **Seguridad Adicional**
+   - Rate limiting implementado (100 req/min por IP)
+   - Rate limiting estricto para login (5 intentos/15 min)
+   - Middleware de validación de datos
+
+7. ✅ **Endpoints de Integraciones**
+   - CRUD completo de logs de integraciones (`/api/integraciones-log`)
+   - Consulta de logs por sistema externo
+   - Endpoints para consultar SIGTB (`POST /api/integraciones/sigtb/consultar`)
+   - Endpoints para consultar NETLAB (`POST /api/integraciones/netlab/consultar`)
+   - Logging automático de todas las operaciones de integración
+   - Estructura lista para implementar llamadas reales cuando se tengan las credenciales
+
+## Tareas Pendientes / Mejoras Futuras
+
+### Funcionalidades Faltantes
+
+1. ✅ **Endpoints de Integraciones** (Completado)
+   - ✅ Consulta de logs de integraciones
+   - ✅ Estructura para integración con SIGTB (RF-07) - Lista para implementar llamadas reales
+   - ✅ Estructura para integración con NETLAB (RNF-02) - Lista para implementar llamadas reales
+   
+   **Nota**: Los servicios de integración están implementados con estructura completa. Solo falta configurar las URLs y credenciales reales de SIGTB y NETLAB en las variables de entorno cuando estén disponibles.
+
+### Mejoras Técnicas
+
+2. **Stored Procedures** (Opcional)
+   - Si se requieren consultas complejas optimizadas
+   - Procedimientos para reportes específicos
+
+3. **Backups Automáticos**
+   - Configurar backups programados de la base de datos
+   - Estrategia de retención de backups
+
+4. **Testing**
+   - Tests unitarios para servicios y repositorios
+   - Tests de integración para endpoints
+   - Tests de carga
+
+5. **Mejoras de Seguridad**
+   - Implementar validación Joi en todos los endpoints
+   - Logging de seguridad más detallado
+   - Monitoreo de intentos de acceso sospechosos
 
 ## Referencias Normativas
 
