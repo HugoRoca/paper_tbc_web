@@ -477,146 +477,38 @@ El backend incluye documentación interactiva con Swagger/OpenAPI:
 
 ## Estado de Implementación del Backend
 
-### ✅ Endpoints Implementados (Completos)
+> **Nota**: Para información detallada sobre los endpoints implementados, ver [`../service/README.md`](../service/README.md)
 
-#### Autenticación
-- `POST /api/auth/login` - Iniciar sesión
-- `GET /api/auth/me` - Obtener información del usuario autenticado
+### Resumen de Cobertura
 
-#### Casos Índice
-- `GET /api/casos-indice` - Listar casos índice
-- `POST /api/casos-indice` - Crear caso índice
-- `GET /api/casos-indice/:id` - Obtener caso índice
-- `PUT /api/casos-indice/:id` - Actualizar caso índice
-- `DELETE /api/casos-indice/:id` - Eliminar caso índice
+- **Tablas con endpoints completos**: 17/17 (100%) ✅
+- **Tablas con endpoints parciales**: 0/17
+- **Tablas sin endpoints**: 0/17
 
-#### Contactos (RF-01)
-- `GET /api/contactos` - Listar contactos
-- `POST /api/contactos` - Crear contacto
-- `GET /api/contactos/:id` - Obtener contacto
-- `GET /api/contactos/caso-indice/:casoIndiceId` - Listar contactos por caso índice
-- `PUT /api/contactos/:id` - Actualizar contacto
-- `DELETE /api/contactos/:id` - Eliminar contacto
+**Nota**: ✅ **TODOS los endpoints están implementados**. Todas las tablas funcionales tienen endpoints completos. Las tablas de logging (`auditoria` e `integraciones_log`) tienen endpoints de consulta para administradores.
 
-#### Exámenes de Contacto (RF-02)
-- `GET /api/examenes-contacto` - Listar exámenes
-- `POST /api/examenes-contacto` - Crear examen
-- `GET /api/examenes-contacto/:id` - Obtener examen
-- `GET /api/examenes-contacto/contacto/:contactoId` - Listar exámenes por contacto
-- `PUT /api/examenes-contacto/:id` - Actualizar examen
-- `DELETE /api/examenes-contacto/:id` - Eliminar examen
+### Endpoints Principales por Categoría
 
-#### Controles de Contacto (RF-03)
-- `GET /api/controles-contacto` - Listar controles
-- `POST /api/controles-contacto` - Crear control
-- `GET /api/controles-contacto/:id` - Obtener control
-- `GET /api/controles-contacto/contacto/:contactoId` - Listar controles por contacto
-- `PUT /api/controles-contacto/:id/realizar` - Marcar control como realizado
-- `PUT /api/controles-contacto/:id` - Actualizar control
-- `DELETE /api/controles-contacto/:id` - Eliminar control
+#### Funcionalidades Core
+- ✅ Casos Índice - CRUD completo
+- ✅ Contactos (RF-01) - CRUD completo
+- ✅ Exámenes de Contacto (RF-02) - CRUD completo
+- ✅ Controles de Contacto (RF-03) - CRUD completo
+- ✅ TPT - Indicaciones, Consentimientos, Seguimiento (RF-04, RF-05) - CRUD completo
+- ✅ Reacciones Adversas (RF-06) - CRUD completo
+- ✅ Visitas Domiciliarias (RF-08) - CRUD completo
+- ✅ Derivaciones/Transferencias (RF-09) - CRUD completo
+- ✅ Alertas (RF-10) - CRUD completo
 
-#### Esquemas TPT
-- `GET /api/esquemas-tpt` - Listar esquemas TPT
-- `POST /api/esquemas-tpt` - Crear esquema TPT
-- `GET /api/esquemas-tpt/:id` - Obtener esquema TPT
-- `PUT /api/esquemas-tpt/:id` - Actualizar esquema TPT
-- `DELETE /api/esquemas-tpt/:id` - Eliminar esquema TPT
+#### Gestión y Administración
+- ✅ Autenticación - Login y perfil de usuario
+- ✅ Gestión de Usuarios - CRUD completo
+- ✅ Gestión de Roles - CRUD completo
+- ✅ Establecimientos de Salud - CRUD completo
+- ✅ Auditoría (RNF-03) - Consulta de registros
+- ✅ Integraciones (RF-07, RNF-02) - Logs y consultas a sistemas externos
 
-#### TPT Indicaciones (RF-04)
-- `GET /api/tpt-indicaciones` - Listar indicaciones TPT
-- `POST /api/tpt-indicaciones` - Crear indicación TPT
-- `GET /api/tpt-indicaciones/:id` - Obtener indicación TPT
-- `GET /api/tpt-indicaciones/contacto/:contactoId` - Listar indicaciones por contacto
-- `PUT /api/tpt-indicaciones/:id/iniciar` - Iniciar TPT
-- `PUT /api/tpt-indicaciones/:id` - Actualizar indicación TPT
-- `DELETE /api/tpt-indicaciones/:id` - Eliminar indicación TPT
-
-#### TPT Consentimientos (RF-05)
-- `POST /api/tpt-consentimientos` - Crear consentimiento TPT
-- `GET /api/tpt-consentimientos/:id` - Obtener consentimiento
-- `GET /api/tpt-consentimientos/tpt-indicacion/:tptIndicacionId` - Obtener consentimiento por indicación
-- `PUT /api/tpt-consentimientos/:id` - Actualizar consentimiento
-- `DELETE /api/tpt-consentimientos/:id` - Eliminar consentimiento
-
-#### TPT Seguimiento (RF-04)
-- `GET /api/tpt-seguimiento` - Listar seguimientos TPT
-- `POST /api/tpt-seguimiento` - Crear seguimiento TPT
-- `GET /api/tpt-seguimiento/:id` - Obtener seguimiento TPT
-- `GET /api/tpt-seguimiento/tpt-indicacion/:tptIndicacionId` - Listar seguimientos por indicación
-- `PUT /api/tpt-seguimiento/:id` - Actualizar seguimiento TPT
-- `DELETE /api/tpt-seguimiento/:id` - Eliminar seguimiento TPT
-
-#### Reacciones Adversas (RF-06)
-- `GET /api/reacciones-adversas` - Listar reacciones adversas
-- `POST /api/reacciones-adversas` - Crear reacción adversa
-- `GET /api/reacciones-adversas/:id` - Obtener reacción adversa
-- `GET /api/reacciones-adversas/tpt-indicacion/:tptIndicacionId` - Listar reacciones por indicación TPT
-- `PUT /api/reacciones-adversas/:id` - Actualizar reacción adversa
-- `DELETE /api/reacciones-adversas/:id` - Eliminar reacción adversa
-
-#### Visitas Domiciliarias (RF-08)
-- `GET /api/visitas-domiciliarias` - Listar visitas domiciliarias
-- `POST /api/visitas-domiciliarias` - Crear visita domiciliaria
-- `GET /api/visitas-domiciliarias/:id` - Obtener visita domiciliaria
-- `GET /api/visitas-domiciliarias/contacto/:contactoId` - Listar visitas por contacto
-- `GET /api/visitas-domiciliarias/caso-indice/:casoIndiceId` - Listar visitas por caso índice
-- `PUT /api/visitas-domiciliarias/:id` - Actualizar visita domiciliaria
-- `DELETE /api/visitas-domiciliarias/:id` - Eliminar visita domiciliaria
-
-#### Derivaciones/Transferencias (RF-09)
-- `GET /api/derivaciones-transferencias` - Listar derivaciones/transferencias
-- `POST /api/derivaciones-transferencias` - Crear derivación/transferencia
-- `GET /api/derivaciones-transferencias/:id` - Obtener derivación/transferencia
-- `GET /api/derivaciones-transferencias/contacto/:contactoId` - Listar por contacto
-- `GET /api/derivaciones-transferencias/establecimiento/:establecimientoId/pendientes` - Listar pendientes por establecimiento
-- `PUT /api/derivaciones-transferencias/:id/aceptar` - Aceptar derivación
-- `PUT /api/derivaciones-transferencias/:id/rechazar` - Rechazar derivación
-- `PUT /api/derivaciones-transferencias/:id` - Actualizar derivación/transferencia
-- `DELETE /api/derivaciones-transferencias/:id` - Eliminar derivación/transferencia
-
-#### Alertas (RF-10)
-- `GET /api/alertas` - Listar alertas
-- `POST /api/alertas` - Crear alerta
-- `GET /api/alertas/activas` - Listar alertas activas
-- `GET /api/alertas/:id` - Obtener alerta
-- `PUT /api/alertas/:id/resolver` - Resolver alerta
-- `PUT /api/alertas/:id` - Actualizar alerta
-- `DELETE /api/alertas/:id` - Eliminar alerta
-
-#### Establecimientos de Salud
-- `GET /api/establecimientos-salud` - Listar establecimientos
-- `POST /api/establecimientos-salud` - Crear establecimiento
-- `GET /api/establecimientos-salud/:id` - Obtener establecimiento
-- `PUT /api/establecimientos-salud/:id` - Actualizar establecimiento
-- `DELETE /api/establecimientos-salud/:id` - Eliminar establecimiento
-
-#### Gestión de Usuarios ✅
-- `GET /api/usuarios` - Listar usuarios (con paginación y filtros, requiere Administrador)
-- `POST /api/usuarios` - Crear usuario (requiere Administrador)
-- `GET /api/usuarios/:id` - Obtener usuario (requiere Administrador)
-- `PUT /api/usuarios/:id` - Actualizar usuario (requiere Administrador)
-- `PUT /api/usuarios/:id/cambiar-password` - Cambiar contraseña (usuario puede cambiar su propia contraseña)
-- `DELETE /api/usuarios/:id` - Eliminar/desactivar usuario (requiere Administrador)
-
-#### Gestión de Roles ✅
-- `GET /api/roles` - Listar roles (todos los usuarios autenticados)
-- `POST /api/roles` - Crear rol (solo Administradores)
-- `GET /api/roles/:id` - Obtener rol (todos los usuarios autenticados)
-- `PUT /api/roles/:id` - Actualizar rol (solo Administradores)
-- `DELETE /api/roles/:id` - Eliminar rol (solo Administradores)
-
-#### Auditoría (RNF-03) ✅
-- `GET /api/auditoria` - Listar registros de auditoría (solo lectura, requiere Administrador)
-- `GET /api/auditoria/:id` - Obtener registro de auditoría (requiere Administrador)
-- `GET /api/auditoria/usuario/:usuarioId` - Listar auditoría por usuario (requiere Administrador)
-- `GET /api/auditoria/tabla/:tabla` - Listar auditoría por tabla (requiere Administrador)
-
-#### Integraciones (RF-07, RNF-02) ✅
-- `GET /api/integraciones-log` - Listar logs de integraciones (solo lectura, requiere Administrador)
-- `GET /api/integraciones-log/:id` - Obtener log de integración (requiere Administrador)
-- `GET /api/integraciones-log/sistema/:sistema` - Listar logs por sistema (SIGTB, NETLAB, Otro, requiere Administrador)
-- `POST /api/integraciones/sigtb/consultar` - Consultar SIGTB (requiere Administrador o Médico)
-- `POST /api/integraciones/netlab/consultar` - Consultar NETLAB (requiere Administrador o Médico)
+**Para ver la lista completa de endpoints con detalles, consulta [`../service/README.md`](../service/README.md#-endpoints-de-la-api)**
 
 ### Resumen de Cobertura
 
