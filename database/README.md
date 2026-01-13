@@ -8,6 +8,44 @@ Este directorio contiene el esquema y scripts de inicialización de la base de d
 - `init_data.sql`: Datos iniciales y de ejemplo para desarrollo y pruebas
 - `README.md`: Esta documentación
 
+## Arquitectura del Backend
+
+El backend está implementado con Node.js y sigue una arquitectura en capas:
+
+### Tecnologías Utilizadas
+
+- **Framework**: Koa.js 2.x
+- **ORM**: Sequelize 6.x
+- **Base de datos**: MySQL 8.0+
+- **Autenticación**: JWT (JSON Web Tokens)
+- **Documentación**: Swagger/OpenAPI con Swagger UI
+- **Seguridad**: bcrypt para hash de contraseñas, Helmet para seguridad HTTP
+
+### Estructura del Proyecto
+
+```
+service/
+├── src/
+│   ├── config/          # Configuración (JWT, Swagger, etc.)
+│   ├── controllers/      # Controladores HTTP (manejo de requests/responses)
+│   ├── services/        # Lógica de negocio
+│   ├── repositories/    # Acceso a datos (Sequelize)
+│   ├── models/          # Modelos Sequelize (definición de tablas)
+│   ├── routes/          # Definición de rutas API
+│   ├── middleware/      # Middleware (auth, error handling, audit)
+│   └── index.js         # Punto de entrada de la aplicación
+├── package.json
+└── env.example          # Variables de entorno de ejemplo
+```
+
+### Flujo de Datos
+
+```
+Request → Routes → Controllers → Services → Repositories → Models → Database
+                                                              ↓
+Response ← Routes ← Controllers ← Services ← Repositories ← Models ← Database
+```
+
 ## Requisitos
 
 - MySQL 8.0 o superior
@@ -409,10 +447,21 @@ contactos (1) ──< (N) derivaciones_transferencias
 
 ## Características de Seguridad
 
-- **Encriptación de contraseñas**: Las contraseñas se almacenan como hash (usar bcrypt en la aplicación)
-- **Auditoría completa**: Todas las acciones se registran en la tabla `auditoria`
-- **Roles y permisos**: Sistema de roles para control de acceso (RNF-01)
-- **Trazabilidad**: Registro de usuario que realiza cada acción
+- **Encriptación de contraseñas**: Las contraseñas se almacenan como hash usando bcrypt (implementado en el backend)
+- **Autenticación JWT**: Sistema de tokens JWT para autenticación de usuarios (implementado)
+- **Auditoría completa**: Todas las acciones se registran en la tabla `auditoria` (tabla creada, endpoints pendientes)
+- **Roles y permisos**: Sistema de roles para control de acceso (RNF-01) - Middleware de autorización implementado
+- **Trazabilidad**: Registro de usuario que realiza cada acción en todas las tablas
+- **Soft Deletes**: Eliminación lógica usando campo `activo` en lugar de eliminación física
+- **Validación de datos**: Validación a nivel de base de datos y aplicación (Sequelize)
+
+## Documentación de la API
+
+El backend incluye documentación interactiva con Swagger/OpenAPI:
+
+- **URL de documentación**: `http://localhost:3000/api-docs` (cuando el servidor esté ejecutándose)
+- **Formato**: Swagger UI con especificación OpenAPI 3.0
+- **Autenticación**: Los endpoints protegidos requieren token JWT en el header `Authorization: Bearer <token>`
 
 ## Notas Importantes
 
@@ -426,12 +475,167 @@ contactos (1) ──< (N) derivaciones_transferencias
 
 5. **Soft Deletes**: Muchas tablas tienen un campo `activo` para implementar borrado lógico en lugar de físico.
 
+## Estado de Implementación del Backend
+
+### ✅ Endpoints Implementados (Completos)
+
+#### Autenticación
+- `POST /api/auth/login` - Iniciar sesión
+- `GET /api/auth/me` - Obtener información del usuario autenticado
+
+#### Casos Índice
+- `GET /api/casos-indice` - Listar casos índice
+- `POST /api/casos-indice` - Crear caso índice
+- `GET /api/casos-indice/:id` - Obtener caso índice
+- `PUT /api/casos-indice/:id` - Actualizar caso índice
+- `DELETE /api/casos-indice/:id` - Eliminar caso índice
+
+#### Contactos (RF-01)
+- `GET /api/contactos` - Listar contactos
+- `POST /api/contactos` - Crear contacto
+- `GET /api/contactos/:id` - Obtener contacto
+- `GET /api/contactos/caso-indice/:casoIndiceId` - Listar contactos por caso índice
+- `PUT /api/contactos/:id` - Actualizar contacto
+- `DELETE /api/contactos/:id` - Eliminar contacto
+
+#### Exámenes de Contacto (RF-02)
+- `GET /api/examenes-contacto` - Listar exámenes
+- `POST /api/examenes-contacto` - Crear examen
+- `GET /api/examenes-contacto/:id` - Obtener examen
+- `GET /api/examenes-contacto/contacto/:contactoId` - Listar exámenes por contacto
+- `PUT /api/examenes-contacto/:id` - Actualizar examen
+- `DELETE /api/examenes-contacto/:id` - Eliminar examen
+
+#### Controles de Contacto (RF-03)
+- `GET /api/controles-contacto` - Listar controles
+- `POST /api/controles-contacto` - Crear control
+- `GET /api/controles-contacto/:id` - Obtener control
+- `GET /api/controles-contacto/contacto/:contactoId` - Listar controles por contacto
+- `PUT /api/controles-contacto/:id/realizar` - Marcar control como realizado
+- `PUT /api/controles-contacto/:id` - Actualizar control
+- `DELETE /api/controles-contacto/:id` - Eliminar control
+
+#### Esquemas TPT
+- `GET /api/esquemas-tpt` - Listar esquemas TPT
+- `POST /api/esquemas-tpt` - Crear esquema TPT
+- `GET /api/esquemas-tpt/:id` - Obtener esquema TPT
+- `PUT /api/esquemas-tpt/:id` - Actualizar esquema TPT
+- `DELETE /api/esquemas-tpt/:id` - Eliminar esquema TPT
+
+#### TPT Indicaciones (RF-04)
+- `GET /api/tpt-indicaciones` - Listar indicaciones TPT
+- `POST /api/tpt-indicaciones` - Crear indicación TPT
+- `GET /api/tpt-indicaciones/:id` - Obtener indicación TPT
+- `GET /api/tpt-indicaciones/contacto/:contactoId` - Listar indicaciones por contacto
+- `PUT /api/tpt-indicaciones/:id/iniciar` - Iniciar TPT
+- `PUT /api/tpt-indicaciones/:id` - Actualizar indicación TPT
+- `DELETE /api/tpt-indicaciones/:id` - Eliminar indicación TPT
+
+#### TPT Consentimientos (RF-05)
+- `POST /api/tpt-consentimientos` - Crear consentimiento TPT
+- `GET /api/tpt-consentimientos/:id` - Obtener consentimiento
+- `GET /api/tpt-consentimientos/tpt-indicacion/:tptIndicacionId` - Obtener consentimiento por indicación
+- `PUT /api/tpt-consentimientos/:id` - Actualizar consentimiento
+- `DELETE /api/tpt-consentimientos/:id` - Eliminar consentimiento
+
+#### TPT Seguimiento (RF-04)
+- `GET /api/tpt-seguimiento` - Listar seguimientos TPT
+- `POST /api/tpt-seguimiento` - Crear seguimiento TPT
+- `GET /api/tpt-seguimiento/:id` - Obtener seguimiento TPT
+- `GET /api/tpt-seguimiento/tpt-indicacion/:tptIndicacionId` - Listar seguimientos por indicación
+- `PUT /api/tpt-seguimiento/:id` - Actualizar seguimiento TPT
+- `DELETE /api/tpt-seguimiento/:id` - Eliminar seguimiento TPT
+
+#### Reacciones Adversas (RF-06)
+- `GET /api/reacciones-adversas` - Listar reacciones adversas
+- `POST /api/reacciones-adversas` - Crear reacción adversa
+- `GET /api/reacciones-adversas/:id` - Obtener reacción adversa
+- `GET /api/reacciones-adversas/tpt-indicacion/:tptIndicacionId` - Listar reacciones por indicación TPT
+- `PUT /api/reacciones-adversas/:id` - Actualizar reacción adversa
+- `DELETE /api/reacciones-adversas/:id` - Eliminar reacción adversa
+
+#### Visitas Domiciliarias (RF-08)
+- `GET /api/visitas-domiciliarias` - Listar visitas domiciliarias
+- `POST /api/visitas-domiciliarias` - Crear visita domiciliaria
+- `GET /api/visitas-domiciliarias/:id` - Obtener visita domiciliaria
+- `GET /api/visitas-domiciliarias/contacto/:contactoId` - Listar visitas por contacto
+- `GET /api/visitas-domiciliarias/caso-indice/:casoIndiceId` - Listar visitas por caso índice
+- `PUT /api/visitas-domiciliarias/:id` - Actualizar visita domiciliaria
+- `DELETE /api/visitas-domiciliarias/:id` - Eliminar visita domiciliaria
+
+#### Derivaciones/Transferencias (RF-09)
+- `GET /api/derivaciones-transferencias` - Listar derivaciones/transferencias
+- `POST /api/derivaciones-transferencias` - Crear derivación/transferencia
+- `GET /api/derivaciones-transferencias/:id` - Obtener derivación/transferencia
+- `GET /api/derivaciones-transferencias/contacto/:contactoId` - Listar por contacto
+- `GET /api/derivaciones-transferencias/establecimiento/:establecimientoId/pendientes` - Listar pendientes por establecimiento
+- `PUT /api/derivaciones-transferencias/:id/aceptar` - Aceptar derivación
+- `PUT /api/derivaciones-transferencias/:id/rechazar` - Rechazar derivación
+- `PUT /api/derivaciones-transferencias/:id` - Actualizar derivación/transferencia
+- `DELETE /api/derivaciones-transferencias/:id` - Eliminar derivación/transferencia
+
+#### Alertas (RF-10)
+- `GET /api/alertas` - Listar alertas
+- `POST /api/alertas` - Crear alerta
+- `GET /api/alertas/activas` - Listar alertas activas
+- `GET /api/alertas/:id` - Obtener alerta
+- `PUT /api/alertas/:id/resolver` - Resolver alerta
+- `PUT /api/alertas/:id` - Actualizar alerta
+- `DELETE /api/alertas/:id` - Eliminar alerta
+
+#### Establecimientos de Salud
+- `GET /api/establecimientos-salud` - Listar establecimientos
+- `POST /api/establecimientos-salud` - Crear establecimiento
+- `GET /api/establecimientos-salud/:id` - Obtener establecimiento
+- `PUT /api/establecimientos-salud/:id` - Actualizar establecimiento
+- `DELETE /api/establecimientos-salud/:id` - Eliminar establecimiento
+
+### ⚠️ Endpoints Faltantes
+
+#### Gestión de Usuarios
+- `GET /api/usuarios` - Listar usuarios (con paginación y filtros)
+- `POST /api/usuarios` - Crear usuario
+- `GET /api/usuarios/:id` - Obtener usuario
+- `PUT /api/usuarios/:id` - Actualizar usuario
+- `DELETE /api/usuarios/:id` - Eliminar/desactivar usuario
+- `PUT /api/usuarios/:id/cambiar-password` - Cambiar contraseña
+
+#### Gestión de Roles
+- `GET /api/roles` - Listar roles
+- `POST /api/roles` - Crear rol (solo administradores)
+- `GET /api/roles/:id` - Obtener rol
+- `PUT /api/roles/:id` - Actualizar rol
+- `DELETE /api/roles/:id` - Eliminar rol
+
+#### Auditoría (RNF-03)
+- `GET /api/auditoria` - Listar registros de auditoría (solo lectura, requiere permisos especiales)
+- `GET /api/auditoria/:id` - Obtener registro de auditoría
+- `GET /api/auditoria/usuario/:usuarioId` - Listar auditoría por usuario
+- `GET /api/auditoria/tabla/:tabla` - Listar auditoría por tabla
+
+#### Integraciones (RF-07, RNF-02)
+- `GET /api/integraciones-log` - Listar logs de integraciones (solo lectura)
+- `GET /api/integraciones-log/:id` - Obtener log de integración
+- `GET /api/integraciones-log/sistema/:sistema` - Listar logs por sistema (SIGTB, NETLAB)
+- `POST /api/integraciones/sigtb/consultar` - Consultar SIGTB (si se implementa)
+- `POST /api/integraciones/netlab/consultar` - Consultar NETLAB (si se implementa)
+
+### Resumen de Cobertura
+
+- **Tablas con endpoints completos**: 13/15 (87%)
+- **Tablas con endpoints parciales**: 1/15 (usuarios - solo auth)
+- **Tablas sin endpoints**: 3/15 (roles, auditoria, integraciones_log)
+
+**Nota**: Las tablas `auditoria` e `integraciones_log` son principalmente para logging interno y pueden no requerir endpoints públicos, solo de administración.
+
 ## Próximos Pasos
 
-1. Configurar conexión desde el backend Node.js
-2. Implementar migraciones de base de datos
-3. Crear stored procedures si es necesario
-4. Configurar backups automáticos
+1. ✅ Configurar conexión desde el backend Node.js (Completado - usando Sequelize)
+2. ⏳ Implementar endpoints faltantes (usuarios, roles, auditoría)
+3. ⏳ Implementar migraciones de base de datos con Sequelize
+4. ⏳ Crear stored procedures si es necesario
+5. ⏳ Configurar backups automáticos
+6. ⏳ Implementar integraciones con SIGTB y NETLAB (RF-07, RNF-02)
 
 ## Referencias Normativas
 
