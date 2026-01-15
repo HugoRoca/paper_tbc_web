@@ -34,10 +34,10 @@ INSERT INTO establecimientos_salud (codigo, nombre, tipo, direccion, distrito, p
 -- En producción, estas deben ser cambiadas inmediatamente
 
 INSERT INTO usuarios (dni, nombres, apellidos, email, password_hash, rol_id, establecimiento_id) VALUES
-('12345678', 'Juan', 'Pérez García', 'juan.perez@salud.gob.pe', '$2b$10$rOzJqZqZqZqZqZqZqZqZqOqZqZqZqZqZqZqZqZqZqZqZqZqZqZqZq', 1, 1),
-('87654321', 'María', 'González López', 'maria.gonzalez@salud.gob.pe', '$2b$10$rOzJqZqZqZqZqZqZqZqZqOqZqZqZqZqZqZqZqZqZqZqZqZqZqZq', 2, 1),
-('11223344', 'Carlos', 'Rodríguez Martínez', 'carlos.rodriguez@salud.gob.pe', '$2b$10$rOzJqZqZqZqZqZqZqZqZqOqZqZqZqZqZqZqZqZqZqZqZqZqZqZq', 3, 1),
-('44332211', 'Ana', 'Sánchez Fernández', 'ana.sanchez@salud.gob.pe', '$2b$10$rOzJqZqZqZqZqZqZqZqZqOqZqZqZqZqZqZqZqZqZqZqZqZqZqZq', 4, 2);
+('12345678', 'Juan', 'Pérez García', 'juan.perez@salud.gob.pe', '$2b$10$82RI7RwZivh2ohGTp8CuUukHtS0xB86qGdlm.9Hr/3gR4tXW0Sxk6', 1, 1),
+('87654321', 'María', 'González López', 'maria.gonzalez@salud.gob.pe', '$2b$10$82RI7RwZivh2ohGTp8CuUukHtS0xB86qGdlm.9Hr/3gR4tXW0Sxk6', 2, 1),
+('11223344', 'Carlos', 'Rodríguez Martínez', 'carlos.rodriguez@salud.gob.pe', '$2b$10$82RI7RwZivh2ohGTp8CuUukHtS0xB86qGdlm.9Hr/3gR4tXW0Sxk6', 3, 1),
+('44332211', 'Ana', 'Sánchez Fernández', 'ana.sanchez@salud.gob.pe', '$2b$10$82RI7RwZivh2ohGTp8CuUukHtS0xB86qGdlm.9Hr/3gR4tXW0Sxk6', 4, 2);
 
 -- =====================================================
 -- INSERTAR ESQUEMAS DE TPT (RF-04)
@@ -126,9 +126,10 @@ INSERT INTO reacciones_adversas (tpt_indicacion_id, fecha_reaccion, tipo_reaccio
 -- =====================================================
 
 INSERT INTO visitas_domiciliarias (contacto_id, caso_indice_id, tipo_visita, fecha_visita, fecha_programada, hora_visita, direccion_visita, resultado_visita, observaciones, establecimiento_id, usuario_visita_id) VALUES
-(1, 1, 'Primer contacto', '2024-01-18', '2024-01-18', '10:00:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Se realizó evaluación inicial, se explicó el programa de seguimiento', 1, 4),
-(2, 1, 'Primer contacto', '2024-01-18', '2024-01-18', '10:30:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Contacto evaluado, se indicó TPT', 1, 4),
-(1, NULL, 'Seguimiento', '2024-02-20', '2024-02-20', '14:00:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Seguimiento de control, todo normal', 1, 4);
+(1, NULL, 'Primer contacto', '2024-01-18', '2024-01-18', '10:00:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Se realizó evaluación inicial, se explicó el programa de seguimiento', 1, 4),
+(2, NULL, 'Primer contacto', '2024-01-18', '2024-01-18', '10:30:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Contacto evaluado, se indicó TPT', 1, 4),
+(1, NULL, 'Seguimiento', '2024-02-20', '2024-02-20', '14:00:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Seguimiento de control, todo normal', 1, 4),
+(NULL, 1, 'Primer contacto', '2024-01-17', '2024-01-17', '09:00:00', 'Av. Principal 123, Dpto 201', 'Realizada', 'Visita inicial al caso índice para evaluación del entorno familiar', 1, 4);
 
 -- =====================================================
 -- DATOS DE EJEMPLO: ALERTAS (RF-10)

@@ -19,7 +19,7 @@ const sequelize = new Sequelize(
     },
     define: {
       timestamps: true,
-      underscored: false,
+      underscored: true, // Usar snake_case para timestamps (created_at, updated_at)
       freezeTableName: true
     }
   }

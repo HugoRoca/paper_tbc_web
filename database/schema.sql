@@ -306,8 +306,10 @@ CREATE TABLE visitas_domiciliarias (
     INDEX idx_contacto (contacto_id),
     INDEX idx_caso_indice (caso_indice_id),
     INDEX idx_fecha_visita (fecha_visita),
-    INDEX idx_tipo_visita (tipo_visita),
-    CHECK (contacto_id IS NOT NULL OR caso_indice_id IS NOT NULL)
+    INDEX idx_tipo_visita (tipo_visita)
+    -- Nota: La validación de que al menos uno de contacto_id o caso_indice_id debe ser NOT NULL
+    -- se maneja a nivel de aplicación debido a limitaciones de MySQL con CHECK constraints
+    -- cuando hay foreign keys con ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================

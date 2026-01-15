@@ -45,8 +45,19 @@ const app = new Koa();
 app.use(helmet({
   contentSecurityPolicy: false // Deshabilitar CSP para Swagger UI
 }));
+// Configurar CORS para permitir múltiples orígenes
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['http://localhost:3001', 'http://localhost:3002'];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: (ctx) => {
+    const origin = ctx.request.header.origin;
+    if (allowedOrigins.includes(origin)) {
+      return origin;
+    }
+    return allowedOrigins[0]; // Fallback al primer origen permitido
+  },
   credentials: true
 }));
 app.use(logger());
