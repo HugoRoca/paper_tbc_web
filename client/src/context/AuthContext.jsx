@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
           try {
             const response = await authService.getMe()
             if (response && response.success) {
-              setUser(response.data)
+              setUser(response.data.user || response.data)
               setIsAuthenticated(true)
             } else {
               authService.logout()

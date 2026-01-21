@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import Perfil from './pages/Perfil'
 
 // Placeholder components para las demás pantallas
 const Placeholder = ({ title }) => (
@@ -116,7 +117,7 @@ function App() {
             <Route path="integraciones/netlab" element={<Placeholder title="Consultar NETLAB" />} />
             
             {/* Perfil */}
-            <Route path="perfil" element={<Placeholder title="Mi Perfil" />} />
+            <Route path="perfil" element={<Perfil />} />
           </Route>
           
           {/* Ruta catch-all: redirigir a login */}

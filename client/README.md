@@ -26,6 +26,7 @@ client/
 │   ├── hooks/            # Custom hooks
 │   ├── context/          # Context API
 │   ├── utils/            # Utilidades
+│   │   └── apiReference.js  # Referencia de endpoints del backend
 │   ├── assets/           # Imágenes, estilos, etc.
 │   ├── App.jsx           # Componente principal
 │   └── main.jsx          # Punto de entrada
@@ -33,6 +34,19 @@ client/
 ├── package.json
 └── vite.config.js
 ```
+
+## ⚠️ Importante: Referencia de API
+
+**Antes de implementar servicios o formularios, SIEMPRE consultar:**
+- `service/src/controllers/` - Para ver los nombres exactos de campos en request body
+- `service/src/models/` - Para entender la estructura de los modelos
+- `client/src/utils/apiReference.js` - Referencia rápida de patrones comunes
+
+**Errores comunes a evitar:**
+- ❌ Usar camelCase cuando el backend espera snake_case
+- ❌ Usar nombres diferentes en request body (ej: `password_actual` vs `currentPassword`)
+- ❌ Asumir estructura de respuesta sin verificar el controlador
+- ✅ Siempre verificar los controladores del backend antes de implementar
 
 ## 🚀 Instalación
 

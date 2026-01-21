@@ -16,8 +16,8 @@ export const authService = {
   // Cambiar contraseña
   changePassword: async (userId, currentPassword, newPassword) => {
     const response = await api.put(`/usuarios/${userId}/cambiar-password`, {
-      password_actual: currentPassword,
-      password_nueva: newPassword,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
     })
     return response.data
   },
