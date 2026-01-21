@@ -26,7 +26,6 @@ client/
 │   ├── hooks/            # Custom hooks
 │   ├── context/          # Context API
 │   ├── utils/            # Utilidades
-│   │   └── apiReference.js  # Referencia de endpoints del backend
 │   ├── assets/           # Imágenes, estilos, etc.
 │   ├── App.jsx           # Componente principal
 │   └── main.jsx          # Punto de entrada
@@ -35,18 +34,30 @@ client/
 └── vite.config.js
 ```
 
-## ⚠️ Importante: Referencia de API
+## ⚠️ Importante: Consultar Backend para Implementar Servicios
 
-**Antes de implementar servicios o formularios, SIEMPRE consultar:**
-- `service/src/controllers/` - Para ver los nombres exactos de campos en request body
-- `service/src/models/` - Para entender la estructura de los modelos
-- `client/src/utils/apiReference.js` - Referencia rápida de patrones comunes
+**Este proyecto tiene 2 frentes (frontend y backend).**
+
+**Antes de implementar cualquier servicio en `client/src/services/`, SIEMPRE consultar:**
+- `../service/src/controllers/` - Para ver la definición exacta del endpoint:
+  - Verbo HTTP (GET, POST, PUT, DELETE)
+  - Request body (campos exactos, tipos, requeridos)
+  - Response (estructura de la respuesta)
+- `../service/src/models/` - Para entender la estructura de los modelos
+
+**Ejemplo de flujo:**
+1. Ver endpoint en este README (ej: `POST /api/usuarios/:id/cambiar-password`)
+2. Ir a `service/src/controllers/userController.js`
+3. Buscar el método `changePassword` para ver:
+   - Campos del request body: `{ currentPassword, newPassword }`
+   - Estructura de la respuesta: `{ success: true, message: ... }`
+4. Implementar el servicio en el frontend usando esa información exacta
 
 **Errores comunes a evitar:**
-- ❌ Usar camelCase cuando el backend espera snake_case
-- ❌ Usar nombres diferentes en request body (ej: `password_actual` vs `currentPassword`)
-- ❌ Asumir estructura de respuesta sin verificar el controlador
-- ✅ Siempre verificar los controladores del backend antes de implementar
+- ❌ Asumir nombres de campos sin consultar el controlador
+- ❌ Usar camelCase cuando el backend espera snake_case (o viceversa)
+- ❌ Asumir estructura de respuesta sin verificar
+- ✅ **SIEMPRE consultar `service/src/controllers/` antes de implementar**
 
 ## 🚀 Instalación
 
