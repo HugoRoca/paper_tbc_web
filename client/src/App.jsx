@@ -5,6 +5,10 @@ import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Perfil from './pages/Perfil'
+import CasosIndice from './pages/CasosIndice'
+import CasoIndiceDetalle from './pages/CasoIndiceDetalle'
+import CasoIndiceNuevo from './pages/CasoIndiceNuevo'
+import CasoIndiceEditar from './pages/CasoIndiceEditar'
 
 // Placeholder components para las demás pantallas
 const Placeholder = ({ title }) => (
@@ -38,10 +42,10 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             
             {/* Casos Índice */}
-            <Route path="casos-indice" element={<Placeholder title="Casos Índice" />} />
-            <Route path="casos-indice/nuevo" element={<Placeholder title="Nuevo Caso Índice" />} />
-            <Route path="casos-indice/:id" element={<Placeholder title="Detalle Caso Índice" />} />
-            <Route path="casos-indice/:id/editar" element={<Placeholder title="Editar Caso Índice" />} />
+            <Route path="casos-indice" element={<CasosIndice />} />
+            <Route path="casos-indice/nuevo" element={<CasoIndiceNuevo />} />
+            <Route path="casos-indice/:id" element={<CasoIndiceDetalle />} />
+            <Route path="casos-indice/:id/editar" element={<CasoIndiceEditar />} />
             
             {/* Contactos */}
             <Route path="contactos" element={<Placeholder title="Contactos" />} />

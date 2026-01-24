@@ -11,6 +11,20 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    // NO configurar timezone - dejar que MySQL maneje las fechas DATE directamente
+    // Las fechas DATE en MySQL no tienen zona horaria, son solo fechas
+    dialectOptions: {
+      dateStrings: true, // Retornar fechas DATE como strings en lugar de objetos Date
+      typeCast: function (field, next) {
+        // Para campos DATE (DATEONLY), retornar como string sin conversión
+        if (field.type === 'DATE') {
+          const value = field.string();
+          // MySQL retorna DATE como string YYYY-MM-DD directamente
+          return value ? value : null;
+        }
+        return next();
+      }
+    },
     pool: {
       max: parseInt(process.env.DB_CONNECTION_LIMIT) || 10,
       min: 0,

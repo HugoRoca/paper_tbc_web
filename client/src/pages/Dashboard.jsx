@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { dashboardService } from '../services/dashboardService'
 import StatCard from '../components/StatCard'
 import AlertCard from '../components/AlertCard'
+import { formatDateLocal } from '../utils/date'
 import {
   Users,
   UserCheck,
@@ -223,7 +224,7 @@ const Dashboard = () => {
                         </p>
                       )}
                       <p className="text-xs text-gray-400 mt-2">
-                        {new Date(derivacion.fecha_solicitud).toLocaleDateString()}
+                        {formatDateLocal(derivacion.fecha_solicitud)}
                       </p>
                     </div>
                   </div>

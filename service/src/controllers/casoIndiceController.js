@@ -55,6 +55,32 @@ const casoIndiceController = {
       const casoData = ctx.request.body;
       const userId = ctx.state.user.id;
       
+      // Asegurar que las fechas se mantengan como strings YYYY-MM-DD
+      // El input type="date" envía fechas como strings en formato YYYY-MM-DD
+      if (casoData.fecha_diagnostico) {
+        if (typeof casoData.fecha_diagnostico === 'string') {
+          casoData.fecha_diagnostico = casoData.fecha_diagnostico.split('T')[0].split(' ')[0];
+        }
+      }
+      if (casoData.fecha_nacimiento) {
+        if (typeof casoData.fecha_nacimiento === 'string') {
+          casoData.fecha_nacimiento = casoData.fecha_nacimiento.split('T')[0].split(' ')[0];
+        }
+      }
+      
+      // Validar que establecimiento_id sea un número
+      if (casoData.establecimiento_id) {
+        casoData.establecimiento_id = parseInt(casoData.establecimiento_id, 10);
+        if (isNaN(casoData.establecimiento_id)) {
+          ctx.status = 400;
+          ctx.body = {
+            success: false,
+            message: 'El establecimiento_id debe ser un número válido'
+          };
+          return;
+        }
+      }
+      
       const caso = await casoIndiceService.create(casoData, userId);
       
       ctx.status = 201;
@@ -63,6 +89,20 @@ const casoIndiceController = {
         data: caso
       };
     } catch (error) {
+      // Manejar errores de validación de Sequelize
+      if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+        ctx.status = 400;
+        ctx.body = {
+          success: false,
+          message: 'Error de validación',
+          errors: error.errors ? error.errors.map(err => ({
+            field: err.path,
+            message: err.message
+          })) : [{ field: 'general', message: error.message }]
+        };
+        return;
+      }
+      
       ctx.status = error.message.includes('no encontrado') ? 404 : 400;
       ctx.body = {
         success: false,
@@ -209,6 +249,20 @@ const casoIndiceController = {
         data: caso
       };
     } catch (error) {
+      // Manejar errores de validación de Sequelize
+      if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+        ctx.status = 400;
+        ctx.body = {
+          success: false,
+          message: 'Error de validación',
+          errors: error.errors ? error.errors.map(err => ({
+            field: err.path,
+            message: err.message
+          })) : [{ field: 'general', message: error.message }]
+        };
+        return;
+      }
+      
       ctx.status = error.message.includes('no encontrado') ? 404 : 400;
       ctx.body = {
         success: false,

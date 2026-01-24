@@ -1,5 +1,6 @@
 import { AlertTriangle, User, Users, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { formatDateLocal } from '../utils/date'
 
 const AlertCard = ({ alerta }) => {
   const severidadColors = {
@@ -68,7 +69,7 @@ const AlertCard = ({ alerta }) => {
             )}
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              <span>{new Date(alerta.fecha_generacion).toLocaleDateString()}</span>
+              <span>{formatDateLocal(alerta.fecha_generacion)}</span>
             </div>
           </div>
         </div>

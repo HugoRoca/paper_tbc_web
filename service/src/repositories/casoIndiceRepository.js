@@ -1,13 +1,78 @@
-const { CasoIndice, EstablecimientoSalud, Usuario } = require('../models');
-const { Op } = require('sequelize');
+const { CasoIndice, EstablecimientoSalud, Usuario, sequelize } = require('../models');
+const { Op, Sequelize } = require('sequelize');
 
 const casoIndiceRepository = {
   /**
    * Crear nuevo caso índice
    */
   async create(casoData) {
-    const caso = await CasoIndice.create(casoData);
-    return await this.findById(caso.id);
+    // Normalizar fechas a strings YYYY-MM-DD
+    const normalizeDate = (dateValue) => {
+      if (!dateValue) return null;
+      if (typeof dateValue === 'string') {
+        const datePart = dateValue.split('T')[0].split(' ')[0];
+        if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+          return datePart;
+        }
+      }
+      if (dateValue instanceof Date) {
+        const year = dateValue.getFullYear();
+        const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+        const day = String(dateValue.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      return dateValue;
+    };
+    
+    // Normalizar todas las fechas a strings YYYY-MM-DD
+    const fechaDiagnostico = casoData.fecha_diagnostico ? normalizeDate(casoData.fecha_diagnostico) : null;
+    const fechaNacimiento = casoData.fecha_nacimiento ? normalizeDate(casoData.fecha_nacimiento) : null;
+    
+    // Preparar datos para raw query - insertar directamente como strings DATE
+    const { fecha_diagnostico, fecha_nacimiento, ...restData } = casoData;
+    
+    // Construir query SQL directamente para evitar conversiones de Sequelize
+    const columns = [];
+    const values = [];
+    const placeholders = [];
+    
+    // Agregar campos no-fecha
+    Object.keys(restData).forEach(key => {
+      if (restData[key] !== undefined && restData[key] !== null) {
+        columns.push(key);
+        values.push(restData[key]);
+        placeholders.push('?');
+      }
+    });
+    
+    // Agregar fechas como strings directamente
+    if (fechaDiagnostico) {
+      columns.push('fecha_diagnostico');
+      values.push(fechaDiagnostico);
+      placeholders.push('?');
+    }
+    
+    if (fechaNacimiento) {
+      columns.push('fecha_nacimiento');
+      values.push(fechaNacimiento);
+      placeholders.push('?');
+    }
+    
+    
+    // Ejecutar raw query - insertar fechas directamente como strings DATE sin conversión
+    // MySQL acepta strings en formato YYYY-MM-DD directamente para campos DATE
+    const [result] = await sequelize.query(
+      `INSERT INTO casos_indice (${columns.join(', ')}) VALUES (${placeholders.join(', ')})`,
+      {
+        replacements: values,
+        type: sequelize.QueryTypes.INSERT
+      }
+    );
+    
+    // Obtener el ID insertado
+    const insertedId = Array.isArray(result) && result.length > 0 ? result[0] : result;
+    
+    return await this.findById(insertedId);
   },
 
   /**
@@ -87,9 +152,64 @@ const casoIndiceRepository = {
    * Actualizar caso índice
    */
   async update(id, casoData) {
-    await CasoIndice.update(casoData, {
-      where: { id }
+    // Normalizar fechas igual que en create
+    const normalizeDate = (dateValue) => {
+      if (!dateValue) return null;
+      if (typeof dateValue === 'string') {
+        const datePart = dateValue.split('T')[0].split(' ')[0];
+        if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+          return datePart;
+        }
+      }
+      if (dateValue instanceof Date) {
+        const year = dateValue.getFullYear();
+        const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+        const day = String(dateValue.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      return dateValue;
+    };
+    
+    // Normalizar fechas
+    const fechaDiagnostico = casoData.fecha_diagnostico !== undefined ? normalizeDate(casoData.fecha_diagnostico) : undefined;
+    const fechaNacimiento = casoData.fecha_nacimiento !== undefined ? normalizeDate(casoData.fecha_nacimiento) : undefined;
+    
+    // Preparar datos para raw query
+    const { fecha_diagnostico, fecha_nacimiento, ...restData } = casoData;
+    
+    const setClauses = [];
+    const values = [];
+    
+    // Agregar campos no-fecha
+    Object.keys(restData).forEach(key => {
+      if (restData[key] !== undefined && restData[key] !== null) {
+        setClauses.push(`${key} = ?`);
+        values.push(restData[key]);
+      }
     });
+    
+    // Agregar fechas directamente como strings - MySQL acepta YYYY-MM-DD para campos DATE
+    if (fechaDiagnostico !== undefined) {
+      setClauses.push('fecha_diagnostico = ?');
+      values.push(fechaDiagnostico || null);
+    }
+    
+    if (fechaNacimiento !== undefined) {
+      setClauses.push('fecha_nacimiento = ?');
+      values.push(fechaNacimiento || null);
+    }
+    
+    
+    // Ejecutar raw query
+    values.push(id);
+    await sequelize.query(
+      `UPDATE casos_indice SET ${setClauses.join(', ')} WHERE id = ?`,
+      {
+        replacements: values,
+        type: sequelize.QueryTypes.UPDATE
+      }
+    );
+    
     return await this.findById(id);
   },
 
