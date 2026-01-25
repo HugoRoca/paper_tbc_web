@@ -9,6 +9,30 @@ import CasosIndice from './pages/CasosIndice'
 import CasoIndiceDetalle from './pages/CasoIndiceDetalle'
 import CasoIndiceNuevo from './pages/CasoIndiceNuevo'
 import CasoIndiceEditar from './pages/CasoIndiceEditar'
+import Contactos from './pages/Contactos'
+import ContactoDetalle from './pages/ContactoDetalle'
+import ContactoNuevo from './pages/ContactoNuevo'
+import ContactoEditar from './pages/ContactoEditar'
+import ExamenesContacto from './pages/ExamenesContacto'
+import ExamenContactoDetalle from './pages/ExamenContactoDetalle'
+import ExamenContactoNuevo from './pages/ExamenContactoNuevo'
+import ExamenContactoEditar from './pages/ExamenContactoEditar'
+import ControlesContacto from './pages/ControlesContacto'
+import ControlContactoDetalle from './pages/ControlContactoDetalle'
+import ControlContactoNuevo from './pages/ControlContactoNuevo'
+import ControlContactoEditar from './pages/ControlContactoEditar'
+import TptIndicaciones from './pages/TptIndicaciones'
+import TptIndicacionDetalle from './pages/TptIndicacionDetalle'
+import TptIndicacionNuevo from './pages/TptIndicacionNuevo'
+import TptIndicacionEditar from './pages/TptIndicacionEditar'
+import TptSeguimiento from './pages/TptSeguimiento'
+import TptSeguimientoDetalle from './pages/TptSeguimientoDetalle'
+import TptSeguimientoNuevo from './pages/TptSeguimientoNuevo'
+import TptSeguimientoEditar from './pages/TptSeguimientoEditar'
+import ReaccionesAdversas from './pages/ReaccionesAdversas'
+import ReaccionAdversaDetalle from './pages/ReaccionAdversaDetalle'
+import ReaccionAdversaNuevo from './pages/ReaccionAdversaNuevo'
+import ReaccionAdversaEditar from './pages/ReaccionAdversaEditar'
 
 // Placeholder components para las demás pantallas
 const Placeholder = ({ title }) => (
@@ -48,36 +72,40 @@ function App() {
             <Route path="casos-indice/:id/editar" element={<CasoIndiceEditar />} />
             
             {/* Contactos */}
-            <Route path="contactos" element={<Placeholder title="Contactos" />} />
-            <Route path="contactos/nuevo" element={<Placeholder title="Nuevo Contacto" />} />
-            <Route path="contactos/:id" element={<Placeholder title="Detalle Contacto" />} />
-            <Route path="contactos/:id/editar" element={<Placeholder title="Editar Contacto" />} />
+            <Route path="contactos" element={<Contactos />} />
+            <Route path="contactos/nuevo" element={<ContactoNuevo />} />
+            <Route path="contactos/:id" element={<ContactoDetalle />} />
+            <Route path="contactos/:id/editar" element={<ContactoEditar />} />
             
             {/* Exámenes de Contacto */}
-            <Route path="examenes-contacto" element={<Placeholder title="Exámenes de Contacto" />} />
-            <Route path="examenes-contacto/nuevo" element={<Placeholder title="Nuevo Examen" />} />
-            <Route path="examenes-contacto/:id/editar" element={<Placeholder title="Editar Examen" />} />
+            <Route path="examenes-contacto" element={<ExamenesContacto />} />
+            <Route path="examenes-contacto/:id" element={<ExamenContactoDetalle />} />
+            <Route path="examenes-contacto/nuevo" element={<ExamenContactoNuevo />} />
+            <Route path="examenes-contacto/:id/editar" element={<ExamenContactoEditar />} />
             
             {/* Controles de Contacto */}
-            <Route path="controles-contacto" element={<Placeholder title="Controles de Contacto" />} />
-            <Route path="controles-contacto/nuevo" element={<Placeholder title="Nuevo Control" />} />
-            <Route path="controles-contacto/:id/editar" element={<Placeholder title="Editar Control" />} />
+            <Route path="controles-contacto" element={<ControlesContacto />} />
+            <Route path="controles-contacto/nuevo" element={<ControlContactoNuevo />} />
+            <Route path="controles-contacto/:id" element={<ControlContactoDetalle />} />
+            <Route path="controles-contacto/:id/editar" element={<ControlContactoEditar />} />
             
             {/* TPT Indicaciones */}
-            <Route path="tpt-indicaciones" element={<Placeholder title="Indicaciones TPT" />} />
-            <Route path="tpt-indicaciones/nuevo" element={<Placeholder title="Nueva Indicación TPT" />} />
-            <Route path="tpt-indicaciones/:id" element={<Placeholder title="Detalle Indicación TPT" />} />
-            <Route path="tpt-indicaciones/:id/editar" element={<Placeholder title="Editar Indicación TPT" />} />
+            <Route path="tpt-indicaciones" element={<TptIndicaciones />} />
+            <Route path="tpt-indicaciones/nuevo" element={<TptIndicacionNuevo />} />
+            <Route path="tpt-indicaciones/:id" element={<TptIndicacionDetalle />} />
+            <Route path="tpt-indicaciones/:id/editar" element={<TptIndicacionEditar />} />
             
             {/* TPT Seguimiento */}
-            <Route path="tpt-seguimiento" element={<Placeholder title="Seguimiento TPT" />} />
-            <Route path="tpt-seguimiento/nuevo" element={<Placeholder title="Nuevo Seguimiento TPT" />} />
-            <Route path="tpt-seguimiento/:id/editar" element={<Placeholder title="Editar Seguimiento TPT" />} />
+            <Route path="tpt-seguimiento" element={<TptSeguimiento />} />
+            <Route path="tpt-seguimiento/nuevo" element={<TptSeguimientoNuevo />} />
+            <Route path="tpt-seguimiento/:id" element={<TptSeguimientoDetalle />} />
+            <Route path="tpt-seguimiento/:id/editar" element={<TptSeguimientoEditar />} />
             
             {/* Reacciones Adversas */}
-            <Route path="reacciones-adversas" element={<Placeholder title="Reacciones Adversas" />} />
-            <Route path="reacciones-adversas/nuevo" element={<Placeholder title="Nueva Reacción Adversa" />} />
-            <Route path="reacciones-adversas/:id/editar" element={<Placeholder title="Editar Reacción Adversa" />} />
+            <Route path="reacciones-adversas" element={<ReaccionesAdversas />} />
+            <Route path="reacciones-adversas/nuevo" element={<ReaccionAdversaNuevo />} />
+            <Route path="reacciones-adversas/:id" element={<ReaccionAdversaDetalle />} />
+            <Route path="reacciones-adversas/:id/editar" element={<ReaccionAdversaEditar />} />
             
             {/* Visitas Domiciliarias */}
             <Route path="visitas-domiciliarias" element={<Placeholder title="Visitas Domiciliarias" />} />

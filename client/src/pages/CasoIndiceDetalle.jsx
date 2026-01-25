@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { casoIndiceService } from '../services/casoIndiceService'
 import { contactoService } from '../services/contactoService'
@@ -23,6 +23,7 @@ import { formatDateLocal, parseLocalDate } from '../utils/date'
 const CasoIndiceDetalle = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
 
   // Consultar caso índice
@@ -84,6 +85,8 @@ const CasoIndiceDetalle = () => {
     )
   }
 
+  const backLink = location.state?.from || '/casos-indice'
+
   if (casoError || !caso) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -93,7 +96,7 @@ const CasoIndiceDetalle = () => {
             {casoError?.response?.data?.message || 'Caso índice no encontrado'}
           </p>
           <Link
-            to="/casos-indice"
+            to={backLink}
             className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Volver al listado
@@ -122,10 +125,7 @@ const CasoIndiceDetalle = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link
-            to="/casos-indice"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <Link to={backLink} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </Link>
           <div>

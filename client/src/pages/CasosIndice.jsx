@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import { casoIndiceService } from '../services/casoIndiceService'
@@ -35,16 +35,12 @@ const CasosIndice = () => {
 
   // Consultar casos índice
   const { data, isLoading, error } = useQuery({
-    queryKey: ['casos-indice', page, limit, filters, searchTerm],
+    queryKey: ['casos-indice', page, limit, filters],
     queryFn: () => {
       const params = {
         page,
         limit,
         ...filters,
-      }
-      // Si hay búsqueda, agregar al filtro de DNI
-      if (searchTerm) {
-        params.paciente_dni = searchTerm
       }
       // Remover filtros vacíos
       Object.keys(params).forEach(key => {
@@ -76,6 +72,19 @@ const CasosIndice = () => {
 
   const casosIndice = data?.data || []
   const pagination = data?.pagination || { page: 1, total: 0, totalPages: 1 }
+
+  const filteredCasos = useMemo(() => {
+    if (!searchTerm) return casosIndice
+    const term = searchTerm.toLowerCase()
+    return casosIndice.filter((caso) => {
+      const fullName = `${caso.paciente_nombres || ''} ${caso.paciente_apellidos || ''}`.toLowerCase()
+      return (
+        fullName.includes(term) ||
+        (caso.paciente_dni || '').toLowerCase().includes(term) ||
+        (caso.codigo_caso || '').toLowerCase().includes(term)
+      )
+    })
+  }, [casosIndice, searchTerm])
 
   // Manejar búsqueda
   const handleSearch = (e) => {
@@ -158,6 +167,7 @@ const CasosIndice = () => {
             <input
               type="text"
               placeholder="Buscar por DNI, nombre o código de caso..."
+              autoComplete="off"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -273,7 +283,7 @@ const CasosIndice = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {casosIndice.map((caso) => (
+                  {filteredCasos.map((caso) => (
                     <tr key={caso.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-sm font-medium text-gray-900">
