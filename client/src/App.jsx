@@ -48,6 +48,7 @@ import AlertaResolver from './pages/AlertaResolver'
 import AlertaEditar from './pages/AlertaEditar'
 import EstablecimientosSalud from './pages/EstablecimientosSalud'
 import EstablecimientoNuevo from './pages/EstablecimientoNuevo'
+import EstablecimientoDetalle from './pages/EstablecimientoDetalle'
 import EstablecimientoEditar from './pages/EstablecimientoEditar'
 import Usuarios from './pages/Usuarios'
 import UsuarioNuevo from './pages/UsuarioNuevo'
@@ -176,6 +177,7 @@ function App() {
             {/* Establecimientos de Salud */}
             <Route path="establecimientos-salud" element={<EstablecimientosSalud />} />
             <Route path="establecimientos-salud/nuevo" element={<EstablecimientoNuevo />} />
+            <Route path="establecimientos-salud/:id" element={<EstablecimientoDetalle />} />
             <Route path="establecimientos-salud/:id/editar" element={<EstablecimientoEditar />} />
             
             {/* Usuarios (Solo Admin) */}
