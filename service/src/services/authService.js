@@ -55,6 +55,7 @@ const authService = {
         apellidos: userData.apellidos,
         rol_id: userData.rol_id,
         rol_nombre: userData.rol?.nombre,
+        rol: userData.rol || null,
         establecimiento_id: userData.establecimiento_id
       }
     };

@@ -21,6 +21,8 @@ import {
   Menu,
   X,
   ArrowRightLeft,
+  Database,
+  Network,
 } from 'lucide-react'
 
 const Layout = ({ children }) => {
@@ -29,7 +31,8 @@ const Layout = ({ children }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isAdmin = user?.role?.nombre === 'Administrador'
+  const roleName = user?.role?.nombre || user?.rol?.nombre || user?.rol_nombre
+  const isAdmin = roleName === 'Administrador'
 
   const handleLogout = () => {
     logout()
@@ -63,6 +66,9 @@ const Layout = ({ children }) => {
         { icon: Pill, label: 'Indicaciones TPT', path: '/tpt-indicaciones' },
         { icon: Activity, label: 'Seguimiento TPT', path: '/tpt-seguimiento' },
         { icon: AlertTriangle, label: 'Reacciones Adversas', path: '/reacciones-adversas' },
+        ...(isAdmin ? [
+          { icon: Pill, label: 'Esquemas TPT', path: '/esquemas-tpt' },
+        ] : []),
       ],
     },
     {
@@ -87,6 +93,8 @@ const Layout = ({ children }) => {
           { icon: Shield, label: 'Roles', path: '/roles' },
           { icon: FileText, label: 'Auditoría', path: '/auditoria' },
           { icon: Plug, label: 'Integraciones', path: '/integraciones-log' },
+          { icon: Database, label: 'Consultar SIGTB', path: '/integraciones/sigtb' },
+          { icon: Network, label: 'Consultar NETLAB', path: '/integraciones/netlab' },
         ] : []),
       ],
     },
@@ -179,7 +187,7 @@ const Layout = ({ children }) => {
                   {user?.nombres || user?.apellidos || user?.nickname || 'Usuario'}
                 </p>
                 <p className="text-xs text-gray-500 truncate">
-                  {user?.role?.nombre || 'Sin rol'}
+                  {roleName || 'Sin rol'}
                 </p>
               </div>
             </div>

@@ -44,7 +44,11 @@ const authenticate = async (ctx, next) => {
     ctx.state.user = {
       id: userData.id,
       email: userData.email,
+      nombres: userData.nombres,
+      apellidos: userData.apellidos,
       rol_id: userData.rol_id,
+      rol: userData.rol || null,
+      rol_nombre: userData.rol?.nombre || null,
       establecimiento_id: userData.establecimiento_id
     };
 
