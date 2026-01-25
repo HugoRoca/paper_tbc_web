@@ -34,6 +34,7 @@ const roleRoutes = require('./routes/roleRoutes');
 const auditoriaRoutes = require('./routes/auditoriaRoutes');
 const integracionLogRoutes = require('./routes/integracionLogRoutes');
 const integracionRoutes = require('./routes/integracionRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 // Swagger
 const swaggerSpec = require('./config/swagger');
@@ -137,6 +138,7 @@ app.use(roleRoutes.routes()).use(roleRoutes.allowedMethods());
 app.use(auditoriaRoutes.routes()).use(auditoriaRoutes.allowedMethods());
 app.use(integracionLogRoutes.routes()).use(integracionLogRoutes.allowedMethods());
 app.use(integracionRoutes.routes()).use(integracionRoutes.allowedMethods());
+app.use(dashboardRoutes.routes()).use(dashboardRoutes.allowedMethods());
 
 // 404 handler
 app.use(async (ctx) => {

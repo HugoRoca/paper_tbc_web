@@ -1,103 +1,65 @@
 import api from './api'
 
 export const dashboardService = {
-  // Obtener total de casos índice
-  getTotalCasosIndice: async () => {
-    try {
-      const response = await api.get('/casos-indice', {
-        params: {
-          page: 1,
-          limit: 1, // Solo necesitamos el total de la paginación
-        },
-      })
-      console.log('getTotalCasosIndice response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getTotalCasosIndice:', error)
-      throw error
-    }
+  // Obtener estadísticas generales
+  getStats: async () => {
+    const response = await api.get('/dashboard/stats')
+    return response.data
   },
 
-  // Obtener total de contactos
-  getTotalContactos: async () => {
-    try {
-      const response = await api.get('/contactos', {
-        params: {
-          page: 1,
-          limit: 1, // Solo necesitamos el total de la paginación
-        },
-      })
-      console.log('getTotalContactos response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getTotalContactos:', error)
-      throw error
-    }
+  // Obtener distribución de casos por tipo de TB
+  getCasosPorTipo: async () => {
+    const response = await api.get('/dashboard/casos-por-tipo')
+    return response.data
   },
 
-  // Obtener controles pendientes
-  getControlesPendientes: async () => {
-    try {
-      const response = await api.get('/controles-contacto', {
-        params: {
-          estado: 'pendiente',
-          page: 1,
-          limit: 1, // Solo necesitamos el total
-        },
-      })
-      console.log('getControlesPendientes response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getControlesPendientes:', error)
-      throw error
-    }
+  // Obtener casos por mes
+  getCasosPorMes: async (meses = 6) => {
+    const response = await api.get('/dashboard/casos-por-mes', {
+      params: { meses }
+    })
+    return response.data
   },
 
-  // Obtener TPT iniciados
-  getTptIniciados: async () => {
-    try {
-      const response = await api.get('/tpt-indicaciones', {
-        params: {
-          estado: 'iniciado',
-          page: 1,
-          limit: 1, // Solo necesitamos el total
-        },
-      })
-      console.log('getTptIniciados response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getTptIniciados:', error)
-      throw error
-    }
+  // Obtener distribución de contactos por tipo
+  getContactosPorTipo: async () => {
+    const response = await api.get('/dashboard/contactos-por-tipo')
+    return response.data
+  },
+
+  // Obtener distribución de TPT por estado
+  getTptPorEstado: async () => {
+    const response = await api.get('/dashboard/tpt-por-estado')
+    return response.data
+  },
+
+  // Obtener distribución de controles por estado
+  getControlesPorEstado: async () => {
+    const response = await api.get('/dashboard/controles-por-estado')
+    return response.data
+  },
+
+  // Obtener distribución de alertas por severidad
+  getAlertasPorSeveridad: async () => {
+    const response = await api.get('/dashboard/alertas-por-severidad')
+    return response.data
   },
 
   // Obtener alertas activas
   getAlertasActivas: async () => {
-    try {
-      const response = await api.get('/alertas/activas')
-      console.log('getAlertasActivas response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getAlertasActivas:', error)
-      throw error
-    }
+    const response = await api.get('/alertas/activas')
+    return response.data
   },
 
   // Obtener derivaciones pendientes
   getDerivacionesPendientes: async () => {
-    try {
-      const response = await api.get('/derivaciones-transferencias', {
-        params: {
-          estado: 'pendiente',
-          page: 1,
-          limit: 10, // Mostrar las primeras 10
-        },
-      })
-      console.log('getDerivacionesPendientes response:', response.data)
-      return response.data
-    } catch (error) {
-      console.error('Error en getDerivacionesPendientes:', error)
-      throw error
-    }
+    const response = await api.get('/derivaciones-transferencias', {
+      params: {
+        estado: 'pendiente',
+        page: 1,
+        limit: 10,
+      },
+    })
+    return response.data
   },
 }
