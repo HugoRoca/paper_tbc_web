@@ -68,21 +68,23 @@ const SearchableSelect = ({
         placeholder={placeholder}
         autoComplete="off"
         disabled={disabled}
-        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-          error ? 'border-red-300' : 'border-gray-300'
-        } ${disabled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+        className={`input ${error ? 'border-red-300 focus:ring-red-500' : ''}`}
       />
       {isOpen && !disabled && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-auto scrollbar-thin">
           {filteredOptions.length === 0 ? (
-            <div className="px-3 py-2 text-sm text-gray-500">{emptyLabel}</div>
+            <div className="px-4 py-3 text-sm text-gray-500 text-center">{emptyLabel}</div>
           ) : (
             filteredOptions.map((option) => (
               <button
                 type="button"
                 key={option.value}
                 onClick={() => handleSelect(option)}
-                className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                  String(option.value) === String(value)
+                    ? 'bg-blue-50 text-blue-700 font-medium'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
               >
                 {option.label}
               </button>

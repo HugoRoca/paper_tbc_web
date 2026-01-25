@@ -2,6 +2,11 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { User, Mail, Shield, Building2, Lock, Eye, EyeOff, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
+import Card from '../components/Card'
+import Input from '../components/Input'
+import Button from '../components/Button'
+import Badge from '../components/Badge'
+import Loading from '../components/Loading'
 
 const Perfil = () => {
   const { user, changePassword } = useAuth()
@@ -61,115 +66,118 @@ const Perfil = () => {
   }
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando información del usuario...</p>
-        </div>
-      </div>
-    )
+    return <Loading message="Cargando información del usuario..." />
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Mi Perfil</h2>
-        <p className="text-gray-600 mt-1">Gestiona tu información personal y seguridad</p>
+        <h2 className="text-3xl font-bold text-gray-900">Mi Perfil</h2>
+        <p className="text-gray-600 mt-1 flex items-center gap-2">
+          <User className="w-4 h-4" />
+          Gestiona tu información personal y seguridad
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Información del Usuario */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <User className="w-5 h-5 text-blue-600" />
-            Información Personal
-          </h3>
+        <Card hover>
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <User className="w-5 h-5 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Información Personal</h3>
+          </div>
           
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
+          <div className="space-y-5">
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
                 Nombres
               </label>
-              <p className="text-gray-900 font-medium">
+              <p className="text-gray-900 font-semibold text-lg">
                 {user.nombres || 'No especificado'}
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1">
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">
                 Apellidos
               </label>
-              <p className="text-gray-900 font-medium">
+              <p className="text-gray-900 font-semibold text-lg">
                 {user.apellidos || 'No especificado'}
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 Correo Electrónico
               </label>
-              <p className="text-gray-900 font-medium">
+              <p className="text-blue-900 font-semibold text-lg">
                 {user.email || 'No especificado'}
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+            <div className="p-4 bg-purple-50 rounded-xl">
+              <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider flex items-center gap-2">
                 <Shield className="w-4 h-4" />
                 Rol
               </label>
-              <p className="text-gray-900 font-medium">
-                {user.role?.nombre || 'Sin rol asignado'}
-              </p>
+              <Badge variant="primary" size="lg" className="mt-1">
+                {user.role?.nombre || user.rol?.nombre || 'Sin rol asignado'}
+              </Badge>
               {user.role?.descripcion && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-600 mt-2">
                   {user.role.descripcion}
                 </p>
               )}
             </div>
 
             {user.establecimiento_salud && (
-              <div>
-                <label className="block text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">
+              <div className="p-4 bg-green-50 rounded-xl">
+                <label className="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wider flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
                   Establecimiento de Salud
                 </label>
-                <p className="text-gray-900 font-medium">
+                <p className="text-green-900 font-semibold text-lg">
                   {user.establecimiento_salud.nombre || 'No especificado'}
                 </p>
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* Cambiar Contraseña */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Lock className="w-5 h-5 text-blue-600" />
-            Cambiar Contraseña
-          </h3>
+        <Card hover>
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Lock className="w-5 h-5 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Cambiar Contraseña</h3>
+          </div>
 
-          <form onSubmit={handleChangePassword} className="space-y-4">
+          <form onSubmit={handleChangePassword} className="space-y-5">
             <div>
-              <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="currentPassword" className="block text-sm font-semibold text-gray-700 mb-2">
                 Contraseña Actual
               </label>
               <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-5 h-5" />
+                </div>
                 <input
                   id="currentPassword"
                   type={showCurrentPassword ? 'text' : 'password'}
                   value={formData.currentPassword}
                   onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
-                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="input pl-11 pr-11"
                   placeholder="Ingresa tu contraseña actual"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showCurrentPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -181,16 +189,19 @@ const Perfil = () => {
             </div>
 
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 mb-2">
                 Nueva Contraseña
               </label>
               <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-5 h-5" />
+                </div>
                 <input
                   id="newPassword"
                   type={showNewPassword ? 'text' : 'password'}
                   value={formData.newPassword}
                   onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="input pl-11 pr-11"
                   placeholder="Mínimo 6 caracteres"
                   required
                   minLength={6}
@@ -198,7 +209,7 @@ const Perfil = () => {
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showNewPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -207,22 +218,26 @@ const Perfil = () => {
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                <Lock className="w-3 h-3" />
                 La contraseña debe tener al menos 6 caracteres
               </p>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
                 Confirmar Nueva Contraseña
               </label>
               <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-5 h-5" />
+                </div>
                 <input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="input pl-11 pr-11"
                   placeholder="Confirma tu nueva contraseña"
                   required
                   minLength={6}
@@ -230,7 +245,7 @@ const Perfil = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -241,25 +256,19 @@ const Perfil = () => {
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="lg"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              loading={loading}
+              icon={Save}
+              className="w-full"
             >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Actualizando...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Cambiar Contraseña
-                </>
-              )}
-            </button>
+              Cambiar Contraseña
+            </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   )

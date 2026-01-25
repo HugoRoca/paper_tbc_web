@@ -1,6 +1,7 @@
 import { AlertTriangle, User, Users, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatDateLocal } from '../utils/date'
+import Badge from './Badge'
 
 const AlertCard = ({ alerta }) => {
   const severidadColors = {
@@ -35,41 +36,62 @@ const AlertCard = ({ alerta }) => {
     return '/alertas'
   }
 
+  const severidadVariant = {
+    baja: 'primary',
+    media: 'warning',
+    alta: 'danger',
+    critica: 'danger',
+  }[alerta.severidad?.toLowerCase()] || 'warning'
+
   return (
     <Link
       to={getLink()}
-      className="block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+      className="block bg-white rounded-xl shadow-md border border-gray-200 p-5 hover:shadow-lg transition-all duration-200 hover:border-red-300 group"
     >
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
-            <h4 className="font-semibold text-gray-900">{getTipoLabel(alerta.tipo_alerta)}</h4>
-            <span
-              className={`px-2 py-1 text-xs font-medium rounded border ${getSeveridadColor(
-                alerta.severidad
-              )}`}
-            >
+      <div className="flex items-start gap-4">
+        <div className={`p-3 rounded-xl ${
+          alerta.severidad === 'critica' || alerta.severidad === 'alta'
+            ? 'bg-red-100'
+            : alerta.severidad === 'media'
+            ? 'bg-yellow-100'
+            : 'bg-blue-100'
+        }`}>
+          <AlertTriangle className={`w-6 h-6 ${
+            alerta.severidad === 'critica' || alerta.severidad === 'alta'
+              ? 'text-red-600'
+              : alerta.severidad === 'media'
+              ? 'text-yellow-600'
+              : 'text-blue-600'
+          }`} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            <h4 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors">
+              {getTipoLabel(alerta.tipo_alerta)}
+            </h4>
+            <Badge variant={severidadVariant}>
               {alerta.severidad || 'Media'}
-            </span>
+            </Badge>
           </div>
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{alerta.descripcion}</p>
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+            {alerta.descripcion}
+          </p>
+          <div className="flex items-center gap-4 text-xs text-gray-500 flex-wrap">
             {alerta.contacto_id && (
-              <div className="flex items-center gap-1">
-                <User className="w-4 h-4" />
-                <span>Contacto #{alerta.contacto_id}</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+                <User className="w-3.5 h-3.5" />
+                <span className="font-medium">Contacto #{alerta.contacto_id}</span>
               </div>
             )}
             {alerta.caso_indice_id && (
-              <div className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
-                <span>Caso #{alerta.caso_indice_id}</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+                <Users className="w-3.5 h-3.5" />
+                <span className="font-medium">Caso #{alerta.caso_indice_id}</span>
               </div>
             )}
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              <span>{formatDateLocal(alerta.fecha_generacion)}</span>
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded-lg">
+              <Clock className="w-3.5 h-3.5" />
+              <span className="font-medium">{formatDateLocal(alerta.fecha_generacion)}</span>
             </div>
           </div>
         </div>

@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { LogIn, Mail, Lock, Eye, EyeOff, Activity } from 'lucide-react'
 import toast from 'react-hot-toast'
+import Button from '../components/Button'
+import Input from '../components/Input'
+import Card from '../components/Card'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -42,53 +45,50 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full animate-fade-in">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
-            <LogIn className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl mb-4 shadow-xl">
+            <Activity className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Sistema de Monitoreo TBC
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            System contact TBC
           </h1>
-          <p className="text-gray-600">Inicia sesión para continuar</p>
+          <p className="text-gray-600 font-medium">Sistema de Monitoreo de Tuberculosis</p>
         </div>
 
         {/* Formulario */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <Card padding="lg" hover>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                <Mail className="w-4 h-4 inline mr-2" />
-                Correo Electrónico
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                placeholder="tu@email.com"
-                required
-                autoComplete="email"
-              />
-            </div>
+            <Input
+              id="email"
+              type="email"
+              label="Correo Electrónico"
+              icon={Mail}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              required
+              autoComplete="email"
+            />
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                <Lock className="w-4 h-4 inline mr-2" />
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
                 Contraseña
               </label>
               <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <Lock className="w-5 h-5" />
+                </div>
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="input pl-11 pr-11"
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
@@ -96,7 +96,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -108,23 +108,17 @@ const Login = () => {
             </div>
 
             {/* Submit */}
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="lg"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              loading={loading}
+              icon={LogIn}
+              className="w-full"
             >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Iniciando sesión...
-                </>
-              ) : (
-                <>
-                  <LogIn className="w-5 h-5" />
-                  Iniciar Sesión
-                </>
-              )}
-            </button>
+              Iniciar Sesión
+            </Button>
           </form>
 
           {/* Info adicional */}
@@ -133,11 +127,13 @@ const Login = () => {
               Usa tus credenciales proporcionadas por el administrador
             </p>
           </div>
-        </div>
+        </Card>
 
         {/* Footer */}
-        <div className="mt-8 text-center text-sm text-gray-600">
-          <p>© 2024 Sistema de Monitoreo de Tuberculosis</p>
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-600 font-medium">
+            © 2026 Sistema de Monitoreo de Tuberculosis
+          </p>
         </div>
       </div>
     </div>

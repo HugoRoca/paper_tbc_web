@@ -145,16 +145,19 @@ const Contactos = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Contactos</h2>
-          <p className="text-gray-600 mt-1">Censo y seguimiento de contactos</p>
+          <h2 className="text-3xl font-bold text-gray-900">Contactos</h2>
+          <p className="text-gray-600 mt-1 flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            Censo y seguimiento de contactos
+          </p>
         </div>
         <Link
           to="/contactos/nuevo"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="btn btn-primary flex items-center gap-2 w-full sm:w-auto justify-center"
         >
           <Plus className="w-5 h-5" />
           Nuevo Contacto
@@ -162,32 +165,33 @@ const Contactos = () => {
       </div>
 
       {/* Búsqueda y Filtros */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div className="card card-hover">
         {/* Barra de búsqueda */}
-        <form onSubmit={handleSearch} className="flex gap-2 mb-4">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 mb-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Buscar por DNI, nombre o código de caso..."
               autoComplete="off"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input pl-11"
             />
           </div>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="btn btn-primary flex items-center justify-center gap-2"
           >
+            <Search className="w-4 h-4" />
             Buscar
           </button>
           <button
             type="button"
             onClick={() => setShowFilters(!showFilters)}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            className={`btn btn-secondary flex items-center justify-center gap-2 ${showFilters ? 'bg-blue-50 text-blue-700 border-blue-300' : ''}`}
           >
-            <Filter className="w-5 h-5" />
+            <Filter className="w-4 h-4" />
             Filtros
           </button>
         </form>
@@ -258,102 +262,112 @@ const Contactos = () => {
       </div>
 
       {/* Tabla de contactos */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">
-              Total: {pagination.total} contacto{pagination.total !== 1 ? 's' : ''}
-            </span>
+      <div className="card overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Users className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <span className="text-sm font-semibold text-gray-700">
+                Total: {pagination.total} contacto{pagination.total !== 1 ? 's' : ''}
+              </span>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Mostrando {filteredContactos.length} en esta página
+              </p>
+            </div>
           </div>
         </div>
 
         {filteredContactos.length === 0 ? (
-          <div className="text-center py-8">
-            <Users className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-            <p className="text-gray-500">No se encontraron contactos</p>
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-10 h-10 text-gray-400" />
+            </div>
+            <p className="text-gray-500 font-medium">No se encontraron contactos</p>
+            <p className="text-sm text-gray-400 mt-1">Intenta ajustar los filtros de búsqueda</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Contacto
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     DNI
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Caso Índice
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Establecimiento
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Fecha Registro
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredContactos.map((contacto) => (
-                  <tr key={contacto.id} className="hover:bg-gray-50">
+                  <tr key={contacto.id} className="hover:bg-blue-50/50 transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-semibold text-gray-900">
                         {contacto.nombres} {contacto.apellidos}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-500">{contacto.dni || '-'}</span>
+                      <span className="text-sm text-gray-600 font-medium">{contacto.dni || '-'}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                      <span className="badge badge-primary">
                         {contacto.tipo_contacto}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         to={contacto.casoIndice?.id ? `/casos-indice/${contacto.casoIndice.id}` : '#'}
-                        className="text-sm text-blue-600 hover:text-blue-800"
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                       >
                         {contacto.casoIndice?.codigo_caso || '-'}
                       </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-600">
                         {contacto.establecimiento?.nombre || '-'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-600">
                         {contacto.fecha_registro ? formatDateLocal(contacto.fecha_registro) : '-'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1">
                         <Link
                           to={`/contactos/${contacto.id}`}
-                          className="text-blue-600 hover:text-blue-900 p-1"
+                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
                           title="Ver detalle"
                         >
                           <Eye className="w-4 h-4" />
                         </Link>
                         <Link
                           to={`/contactos/${contacto.id}/editar`}
-                          className="text-yellow-600 hover:text-yellow-900 p-1"
+                          className="p-2 text-yellow-600 hover:bg-yellow-100 rounded-lg transition-colors"
                           title="Editar"
                         >
                           <Edit className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => handleDelete(contacto.id, `${contacto.nombres} ${contacto.apellidos}`)}
-                          className="text-red-600 hover:text-red-900 p-1"
+                          className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
                           title="Eliminar"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -369,22 +383,23 @@ const Contactos = () => {
 
         {/* Paginación */}
         {pagination.totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Página {pagination.page} de {pagination.totalPages}
+          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-sm font-medium text-gray-700">
+              Página <span className="font-bold text-blue-600">{pagination.page}</span> de{' '}
+              <span className="font-bold text-gray-900">{pagination.totalPages}</span>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage(Math.max(1, page - 1))}
                 disabled={page === 1}
-                className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setPage(Math.min(pagination.totalPages, page + 1))}
                 disabled={page === pagination.totalPages}
-                className="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn btn-secondary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
