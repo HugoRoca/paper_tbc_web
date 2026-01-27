@@ -12,7 +12,16 @@ El proyecto está dividido en tres partes principales:
 
 ## 🚀 Inicio Rápido
 
-### 1. Base de Datos con Docker
+> **⚠️ Antes de comenzar**: Asegúrate de tener instalados todos los [requisitos del sistema](#-requisitos-del-sistema).
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone <url-del-repositorio>
+cd paper_tbc_web
+```
+
+### 2. Base de Datos con Docker (Recomendado)
 
 La forma más fácil de iniciar la base de datos es usando Docker Compose:
 
@@ -22,11 +31,22 @@ docker-compose up -d
 
 # Ver logs
 docker-compose logs -f mysql
+
+# Verificar que está corriendo
+docker-compose ps
 ```
 
 Esto iniciará MySQL y ejecutará automáticamente los scripts SQL para crear las tablas e insertar datos iniciales.
 
 **Configuración**: El archivo `docker-compose.yml` está configurado para usar el puerto 3306 y crear automáticamente la base de datos `tbc_monitoring` con usuario `tbc_user`.
+
+**Alternativa - MySQL Local**: Si prefieres usar MySQL instalado localmente, asegúrate de:
+1. Crear la base de datos: `CREATE DATABASE tbc_monitoring;`
+2. Ejecutar los scripts SQL manualmente:
+   ```bash
+   mysql -u root -p tbc_monitoring < database/schema.sql
+   mysql -u root -p tbc_monitoring < database/init_data.sql
+   ```
 
 ### 2. Backend
 
@@ -106,12 +126,83 @@ VITE_API_URL=http://localhost:3000
 
 **Nota**: El frontend corre en el puerto 3002 por defecto (configurado en `vite.config.js`).
 
-## 📋 Requisitos
+## 📋 Requisitos del Sistema
 
-- Node.js 18+
-- MySQL 8.0+ (o Docker con Docker Compose)
-- npm o yarn
-- Git
+Para ejecutar este sistema, necesitas instalar los siguientes componentes:
+
+### 🔧 Componentes Requeridos
+
+#### 1. Node.js (Requerido)
+- **Versión mínima**: 18.0.0 o superior
+- **Recomendado**: 18.x LTS o 20.x LTS
+- **Descarga**: 
+  - **Windows/Mac/Linux**: [https://nodejs.org/](https://nodejs.org/)
+  - **LTS (Recomendado)**: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
+- **Verificar instalación**: `node --version`
+- **Nota**: npm viene incluido con Node.js (verificar con `npm --version`)
+
+#### 2. MySQL (Requerido - Opción 1: Instalación Local)
+- **Versión mínima**: MySQL 8.0 o superior
+- **Recomendado**: MySQL 8.0.x o MySQL 8.4.x
+- **Descarga**:
+  - **Windows**: [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/)
+  - **macOS**: [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/) (o usar Homebrew: `brew install mysql`)
+  - **Linux**: [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/) (o usar repositorio del sistema)
+- **Verificar instalación**: `mysql --version`
+- **Puerto por defecto**: 3306
+
+### 📦 Componentes Opcionales (Recomendados)
+
+#### 4. Git (Opcional pero Recomendado)
+- **Versión**: Cualquier versión reciente
+- **Descarga**: 
+  - **Windows/Mac/Linux**: [https://git-scm.com/downloads](https://git-scm.com/downloads)
+  - **macOS**: También disponible vía Homebrew (`brew install git`)
+- **Verificar instalación**: `git --version`
+- **Uso**: Para clonar el repositorio y control de versiones
+
+#### 5. Editor de Código (Opcional)
+- **Recomendado**: 
+  - **Visual Studio Code**: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+  - **WebStorm**: [https://www.jetbrains.com/webstorm/](https://www.jetbrains.com/webstorm/)
+  - **Sublime Text**: [https://www.sublimetext.com/](https://www.sublimetext.com/)
+
+### ✅ Verificación de Instalación
+
+Ejecuta los siguientes comandos para verificar que todo está instalado correctamente:
+
+```bash
+# Verificar Node.js y npm
+node --version    # Debe mostrar v18.x.x o superior
+npm --version     # Debe mostrar 9.x.x o superior
+
+# Si instalaste MySQL localmente
+mysql --version   # Debe mostrar mysql Ver 8.0.x o superior
+
+# Si instalaste Git
+git --version     # Debe mostrar git version 2.x.x o superior
+```
+
+### 🎯 Opciones de Instalación
+
+**Opción A: Con Docker (Recomendado para desarrollo)**
+- ✅ Más fácil de configurar
+- ✅ No requiere instalación manual de MySQL
+- ✅ Entorno aislado y reproducible
+- ✅ Fácil de limpiar y reiniciar
+
+**Opción B: Instalación Local**
+- ✅ Mejor rendimiento
+- ✅ Más control sobre la configuración
+- ⚠️ Requiere configuración manual de MySQL
+- ⚠️ Puede tener conflictos con otras instalaciones
+
+### 📝 Notas Importantes
+
+- **Node.js**: Asegúrate de instalar la versión LTS (Long Term Support) para mayor estabilidad
+- **MySQL**: Si usas Docker, no necesitas instalar MySQL localmente
+- **Puertos**: Asegúrate de que los puertos 3000 (backend), 3002 (frontend) y 3306 (MySQL) estén disponibles
+- **Permisos**: En Linux/Mac, puede ser necesario usar `sudo` para algunas instalaciones
 
 ## 🔐 Credenciales por Defecto
 
